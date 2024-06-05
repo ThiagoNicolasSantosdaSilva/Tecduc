@@ -1,7 +1,7 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Coletar e validar os dados do formulário
-    $nome = isset($_POST['nome']) ? trim($_POST['name']) : '';
+    $nome = isset($_POST['nome']) ? trim($_POST['nome']) : '';
     $email = isset($_POST['email']) ? trim($_POST['email']) : '';
     $assunto = isset($_POST['assunto']) ? trim($_POST['assunto']) : '';
     $mensagem = isset($_POST['mensagem']) ? trim($_POST['mensagem']) : '';
@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($nome)) {
         $erros[] = "O campo nome é obrigatório.";
     } else {
-        $nome = filter_var($nome, FILTER_SANITIZE_STRING);
+        $nome = htmlspecialchars($nome, ENT_QUOTES, 'UTF-8');
     }
 
     if (empty($email)) {
@@ -26,21 +26,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($assunto)) {
         $erros[] = "O campo assunto é obrigatório.";
     } else {
-        $assunto = filter_var($assunto, FILTER_SANITIZE_STRING);
+        $assunto = htmlspecialchars($assunto, ENT_QUOTES, 'UTF-8');
     }
 
     if (empty($mensagem)) {
         $erros[] = "O campo mensagem é obrigatório.";
     } else {
-        $mensagem = filter_var($mensagem, FILTER_SANITIZE_STRING);
+        $mensagem = htmlspecialchars($mensagem, ENT_QUOTES, 'UTF-8');
     }
 
     // Se não houver erros, envia o email
     if (empty($erros)) {
         // Configurações do email
         $para = "comercial@tecduc.com.br";
-        $headers = "From: $email\r\n";
-        $headers .= "Reply-To: $email\r\n";
+        $headers = "From: " . str_replace(array("\r", "\n"), '', $email) . "\r\n";
+        $headers .= "Reply-To: " . str_replace(array("\r", "\n"), '', $email) . "\r\n";
         $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
         // Conteúdo do email
