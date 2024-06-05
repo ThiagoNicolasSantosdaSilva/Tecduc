@@ -54,11 +54,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conteudo .= "<p><strong>Mensagem: </strong>" . nl2br(htmlspecialchars($mensagem, ENT_QUOTES, 'UTF-8')) . "</p>";
         $conteudo .= "</body></html>";
 
-        // Enviar o email
-        if (mail($para, $assunto_email, $conteudo, $headers)) {
+        // Enviar o email e capturar o resultado
+        $envio_email = mail($para, $assunto_email, $conteudo, $headers);
+        
+        if ($envio_email) {
             echo "Email enviado com sucesso!";
         } else {
-            echo "Erro ao enviar o email. Tente novamente mais tarde.";
+            $errorMessage = error_get_last()['message'];
+            echo "Erro ao enviar o email. Tente novamente mais tarde. Detalhes do erro: $errorMessage";
         }
     } else {
         // Exibir erros
