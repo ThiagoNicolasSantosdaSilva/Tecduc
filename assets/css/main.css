@@ -2857,6 +2857,7 @@ section,
 .MVV .services-item .services-icon {
   color: var(--accent-color);
   margin-bottom: 20px;
+  margin-left: 110px;
 }
 
 .MVV .services-item .services-icon i {
@@ -2867,8 +2868,9 @@ section,
   font-size: 29px;
   font-weight: 400;
   color: #000;
+  text-align: center;
 }
 
 .MVV .services-item p{
-  text-align: left;
+  text-align: center;
 }
