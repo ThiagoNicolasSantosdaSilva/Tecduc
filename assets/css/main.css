@@ -1763,85 +1763,6 @@ section,
 }
 
 /*--------------------------------------------------------------
-# Team Section
---------------------------------------------------------------*/
-.team .member {
-  position: relative;
-}
-
-.team .member .member-img {
-  margin: 0 80px;
-  border-radius: 50%;
-  overflow: hidden;
-  position: relative;
-}
-
-@media (max-width: 1024px) {
-  .team .member .member-img {
-    margin: 0 60px;
-  }
-}
-
-.team .member .member-img img {
-  position: relative;
-  z-index: 1;
-}
-
-.team .member .member-img .social {
-  position: absolute;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2;
-  padding-bottom: 20px;
-  transition: 0.3s;
-  visibility: hidden;
-  opacity: 0;
-}
-
-.team .member .member-img .social a {
-  transition: 0.3s;
-  color: var(--contrast-color);
-  font-size: 20px;
-  margin: 0 8px;
-}
-
-.team .member .member-img .social a:hover {
-  color: var(--accent-color);
-}
-
-.team .member .member-info {
-  margin-top: 30px;
-}
-
-.team .member .member-info h4 {
-  font-weight: 700;
-  margin-bottom: 6px;
-  font-size: 18px;
-}
-
-.team .member .member-info span {
-  font-style: italic;
-  display: block;
-  font-size: 15px;
-  color: color-mix(in srgb, var(--default-color), transparent 40%);
-  margin-bottom: 10px;
-}
-
-.team .member .member-info p {
-  margin-bottom: 0;
-  font-size: 14px;
-}
-
-.team .member:hover .member-img .social {
-  padding-bottom: 0;
-  visibility: visible;
-  opacity: 1;
-}
-
-/*--------------------------------------------------------------
 # Features Cards Section
 --------------------------------------------------------------*/
 .features-cards h3 {
@@ -2845,17 +2766,26 @@ section,
 }
 
 /*--------------------------------------------------------------
-# Services Section
+# MVV Section
 --------------------------------------------------------------*/
 .MVV {
   padding-top: 60px;
   padding-bottom: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.MVV .services-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .MVV .services-item .services-icon {
   color: var(--accent-color);
   margin-bottom: 20px;
-  margin-left: 110px;
 }
 
 .MVV .services-item .services-icon i {
@@ -2866,9 +2796,38 @@ section,
   font-size: 29px;
   font-weight: 400;
   color: #000;
+}
+
+.MVV .services-item p {
   text-align: center;
 }
 
-.MVV .services-item p{
-  text-align: center;
+@media (max-width: 1024px) {
+  .MVV .services-item h2 {
+    font-size: 27px;
+  }
+}
+
+@media (max-width: 768px) {
+  .MVV .services-item h2 {
+    font-size: 25px;
+  }
+}
+
+@media (max-width: 425px) {
+  .MVV .services-item h2 {
+    font-size: 23px;
+  }
+}
+
+@media (max-width: 375px) {
+  .MVV .services-item h2 {
+    font-size: 21px;
+  }
+}
+
+@media (max-width: 320px) {
+  .MVV .services-item h2 {
+    font-size: 19px;
+  }
 }
