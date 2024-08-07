@@ -1,42 +1,18 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nome = htmlspecialchars($_POST['nome']);
-    $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
-    $assunto = htmlspecialchars($_POST['assunto']);
-    $mensagem = htmlspecialchars($_POST['mensagem']);
-    $recaptchaResponse = $_POST['recaptcha-response'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") { // Verifica se o método de requisição é POST
+    $nome = htmlspecialchars($_POST['nome']); // Sanitiza o valor do campo 'nome'
+    $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL); // Valida e sanitiza o valor do campo 'email'
+    $assunto = htmlspecialchars($_POST['assunto']); // Sanitiza o valor do campo 'assunto'
+    $mensagem = htmlspecialchars($_POST['mensagem']); // Sanitiza o valor do campo 'mensagem'
 
-    // Verifica o reCAPTCHA
-    $recaptchaSecret = 'YOUR_RECAPTCHA_SECRET_KEY'; // Substitua pela sua chave secreta do reCAPTCHA
-    $recaptchaURL = 'https://www.google.com/recaptcha/api/siteverify';
-    $recaptchaData = [
-        'secret' => $recaptchaSecret,
-        'response' => $recaptchaResponse
-    ];
-    $recaptchaOptions = [
-        'http' => [
-            'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-            'method'  => 'POST',
-            'content' => http_build_query($recaptchaData)
-        ]
-    ];
-    $recaptchaContext = stream_context_create($recaptchaOptions);
-    $recaptchaResult = file_get_contents($recaptchaURL, false, $recaptchaContext);
-    $recaptchaResult = json_decode($recaptchaResult, true);
+    if ($email) { // Verifica se o email é válido
+        $to = "profissional.thiagonicolas@gmail.com"; // Substitua pelo seu email
+        $headers = "From: " . $email . "\r\n"; // Define o cabeçalho 'From' do email
+        $headers .= "Reply-To: " . $email . "\r\n"; // Define o cabeçalho 'Reply-To' do email
+        $headers .= "Content-Type: text/html; charset=UTF-8\r\n"; // Define o cabeçalho 'Content-Type' do email
 
-    if ($recaptchaResult['success'] == false) {
-        echo 'Erro ao validar o reCAPTCHA!';
-        exit;
-    }
-
-    if ($email) {
-        $to = "seuemail@dominio.com"; // Substitua pelo seu email
-        $headers = "From: " . $email . "\r\n";
-        $headers .= "Reply-To: " . $email . "\r\n";
-        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-
-        $email_subject = "Contato de: $nome - $assunto";
-        $email_body = "
+        $email_subject = "Contato de: $nome - $assunto"; // Define o assunto do email
+        $email_body = " // Cria o corpo do email em formato HTML
             <html>
             <head>
                 <title>$assunto</title>
@@ -51,15 +27,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </html>
         ";
 
-        if (mail($to, $email_subject, $email_body, $headers)) {
-            echo 'OK';
+        if (mail($to, $email_subject, $email_body, $headers)) { // Envia o email e verifica se foi bem-sucedido
+            echo "Sua Menssagem foi enviada com sucesso. Obrigado!"; // Exibe mensagem de sucesso
         } else {
-            echo 'Erro ao enviar a mensagem!';
+            echo "Erro ao enviar a Menssagem!!"; // Exibe mensagem de erro ao enviar
         }
     } else {
-        echo 'Email inválido.';
+        echo "Email inválido."; // Exibe mensagem de erro se o email for inválido
     }
 } else {
-    echo 'Método de requisição inválido.';
+    echo "Método de requisição inválido."; // Exibe mensagem de erro se o método de requisição não for POST
 }
 ?>
+    
