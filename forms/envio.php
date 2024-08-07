@@ -1,75 +1,65 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Coletar e validar os dados do formulário
-    $nome = isset($_POST['nome']) ? trim($_POST['nome']) : '';
-    $email = isset($_POST['email']) ? trim($_POST['email']) : '';
-    $assunto = isset($_POST['assunto']) ? trim($_POST['assunto']) : '';
-    $mensagem = isset($_POST['mensagem']) ? trim($_POST['mensagem']) : '';
+    $nome = htmlspecialchars($_POST['nome']);
+    $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+    $assunto = htmlspecialchars($_POST['assunto']);
+    $mensagem = htmlspecialchars($_POST['mensagem']);
+    $recaptchaResponse = $_POST['recaptcha-response'];
 
-    $erros = [];
+    // Verifica o reCAPTCHA
+    $recaptchaSecret = 'YOUR_RECAPTCHA_SECRET_KEY'; // Substitua pela sua chave secreta do reCAPTCHA
+    $recaptchaURL = 'https://www.google.com/recaptcha/api/siteverify';
+    $recaptchaData = [
+        'secret' => $recaptchaSecret,
+        'response' => $recaptchaResponse
+    ];
+    $recaptchaOptions = [
+        'http' => [
+            'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+            'method'  => 'POST',
+            'content' => http_build_query($recaptchaData)
+        ]
+    ];
+    $recaptchaContext = stream_context_create($recaptchaOptions);
+    $recaptchaResult = file_get_contents($recaptchaURL, false, $recaptchaContext);
+    $recaptchaResult = json_decode($recaptchaResult, true);
 
-    // Validar e filtrar os dados
-    if (empty($nome)) {
-        $erros[] = "O campo nome é obrigatório.";
-    } else {
-        $nome = htmlspecialchars($nome, ENT_QUOTES, 'UTF-8');
+    if ($recaptchaResult['success'] == false) {
+        echo 'Erro ao validar o reCAPTCHA!';
+        exit;
     }
 
-    if (empty($email)) {
-        $erros[] = "O campo email é obrigatório.";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $erros[] = "O email informado não é válido.";
-    } else {
-        $email = filter_var($email, FILTER_SANITIZE_EMAIL);
-    }
-
-    if (empty($assunto)) {
-        $erros[] = "O campo assunto é obrigatório.";
-    } else {
-        $assunto = htmlspecialchars($assunto, ENT_QUOTES, 'UTF-8');
-    }
-
-    if (empty($mensagem)) {
-        $erros[] = "O campo mensagem é obrigatório.";
-    } else {
-        $mensagem = htmlspecialchars($mensagem, ENT_QUOTES, 'UTF-8');
-    }
-
-    // Se não houver erros, envia o email
-    if (empty($erros)) {
-        // Configurações do email
-        $para = "comercial@tecduc.com.br";
-        $assunto_email = htmlspecialchars($assunto, ENT_QUOTES, 'UTF-8');
-        $email_clean = str_replace(array("\r", "\n"), '', $email); // Proteção contra injeção de cabeçalho
-        $headers = "From: " . $email_clean . "\r\n";
-        $headers .= "Reply-To: " . $email_clean . "\r\n";
+    if ($email) {
+        $to = "seuemail@dominio.com"; // Substitua pelo seu email
+        $headers = "From: " . $email . "\r\n";
+        $headers .= "Reply-To: " . $email . "\r\n";
         $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
-        // Conteúdo do email
-        $conteudo = "<html><body>";
-        $conteudo .= "<h2>Formulário de Contato</h2>";
-        $conteudo .= "<p><strong>Nome: </strong>" . htmlspecialchars($nome, ENT_QUOTES, 'UTF-8') . "</p>";
-        $conteudo .= "<p><strong>Email: </strong>" . htmlspecialchars($email, ENT_QUOTES, 'UTF-8') . "</p>";
-        $conteudo .= "<p><strong>Assunto: </strong>" . htmlspecialchars($assunto, ENT_QUOTES, 'UTF-8') . "</p>";
-        $conteudo .= "<p><strong>Mensagem: </strong>" . nl2br(htmlspecialchars($mensagem, ENT_QUOTES, 'UTF-8')) . "</p>";
-        $conteudo .= "</body></html>";
+        $email_subject = "Contato de: $nome - $assunto";
+        $email_body = "
+            <html>
+            <head>
+                <title>$assunto</title>
+            </head>
+            <body>
+                <p><strong>Nome:</strong> $nome</p>
+                <p><strong>Email:</strong> $email</p>
+                <p><strong>Assunto:</strong> $assunto</p>
+                <p><strong>Mensagem:</strong></p>
+                <p>$mensagem</p>
+            </body>
+            </html>
+        ";
 
-        // Enviar o email e capturar o resultado
-        $envio_email = mail($para, $assunto_email, $conteudo, $headers);
-        
-        if ($envio_email) {
-            echo "Email enviado com sucesso!";
+        if (mail($to, $email_subject, $email_body, $headers)) {
+            echo 'OK';
         } else {
-            $errorMessage = error_get_last()['message'];
-            echo "Erro ao enviar o email. Tente novamente mais tarde. Detalhes do erro: $errorMessage";
+            echo 'Erro ao enviar a mensagem!';
         }
     } else {
-        // Exibir erros
-        foreach ($erros as $erro) {
-            echo "<p>$erro</p>";
-        }
+        echo 'Email inválido.';
     }
 } else {
-    echo "Método de requisição inválido.";
+    echo 'Método de requisição inválido.';
 }
 ?>

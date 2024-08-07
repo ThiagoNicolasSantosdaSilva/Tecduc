@@ -10,7 +10,7 @@
   "use strict";
 
   /**
-   * Apply .scrolled class to the body as the page is scrolled down
+   * Adiciona a classe .scrolled ao body conforme a página é rolada para baixo
    */
   function toggleScrolled() {
     const selectBody = document.querySelector('body');
@@ -23,7 +23,7 @@
   window.addEventListener('load', toggleScrolled);
 
   /**
-   * Mobile nav toggle
+   * Alternar navegação móvel
    */
   const mobileNavToggleBtn = document.querySelector('.mobile-nav-toggle');
 
@@ -35,7 +35,7 @@
   mobileNavToggleBtn.addEventListener('click', mobileNavToogle);
 
   /**
-   * Hide mobile nav on same-page/hash links
+   * Esconder navegação móvel em links de mesma página/hash
    */
   document.querySelectorAll('#navmenu a').forEach(navmenu => {
     navmenu.addEventListener('click', () => {
@@ -43,11 +43,10 @@
         mobileNavToogle();
       }
     });
-
   });
 
   /**
-   * Toggle mobile nav dropdowns
+   * Alternar dropdowns de navegação móvel
    */
   document.querySelectorAll('.navmenu .toggle-dropdown').forEach(navmenu => {
     navmenu.addEventListener('click', function(e) {
@@ -71,7 +70,7 @@
   }
 
   /**
-   * Scroll top button
+   * Botão de rolagem para o topo
    */
   let scrollTop = document.querySelector('.scroll-top');
 
@@ -92,7 +91,7 @@
   document.addEventListener('scroll', toggleScrollTop);
 
   /**
-   * Animation on scroll function and init
+   * Função de animação ao rolar e inicialização
    */
   function aosInit() {
     AOS.init({
@@ -105,14 +104,14 @@
   window.addEventListener('load', aosInit);
 
   /**
-   * Initiate glightbox
+   * Inicializar GLightbox
    */
   const glightbox = GLightbox({
     selector: '.glightbox'
   });
 
   /**
-   * Init isotope layout and filters
+   * Inicializar layout e filtros Isotope
    */
   document.querySelectorAll('.isotope-layout').forEach(function(isotopeItem) {
     let layout = isotopeItem.getAttribute('data-layout') ?? 'masonry';
@@ -141,11 +140,10 @@
         }
       }, false);
     });
-
   });
 
   /**
-   * Init swiper sliders
+   * Inicializar sliders Swiper
    */
   function initSwiper() {
     document.querySelectorAll('.swiper').forEach(function(swiper) {
@@ -156,8 +154,47 @@
   window.addEventListener('load', initSwiper);
 
   /**
-   * Initiate Pure Counter
+   * Inicializar Pure Counter
    */
   new PureCounter();
 
 })();
+
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.querySelector('.php-email-form');
+  const loading = document.querySelector('.loading');
+  const errorMessage = document.querySelector('.error-message');
+  const sentMessage = document.querySelector('.sent-message');
+
+  form.addEventListener('submit', function(event) {
+      event.preventDefault(); // Impede o envio padrão do formulário
+
+      loading.style.display = 'block';
+      errorMessage.style.display = 'none';
+      sentMessage.style.display = 'none';
+
+      const formData = new FormData(form);
+
+      fetch(form.action, {
+          method: form.method,
+          body: formData
+      })
+      .then(response => response.text())
+      .then(data => {
+          loading.style.display = 'none';
+          if (data.trim() === 'OK') {
+              sentMessage.style.display = 'block';
+              form.reset(); // Reseta o formulário após o envio bem-sucedido
+          } else {
+              errorMessage.textContent = data; // Exibe a mensagem de erro retornada
+              errorMessage.style.display = 'block';
+          }
+      })
+      .catch(error => {
+          loading.style.display = 'none';
+          errorMessage.textContent = 'Erro ao enviar a mensagem!'; // Exibe uma mensagem de erro genérica
+          errorMessage.style.display = 'block';
+          console.error('Erro:', error);
+      });
+  });
+});

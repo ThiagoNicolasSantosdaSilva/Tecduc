@@ -1,8 +1,3 @@
-/**
-* PHP Email Form Validation - v3.7
-* URL: https://bootstrapmade.com/php-email-form/
-* Autor: BootstrapMade.com
-*/
 (function () {
   "use strict";
 
@@ -29,9 +24,9 @@
       }
 
       // Exibe o indicador de carregamento e oculta as mensagens de erro e sucesso
-      thisForm.querySelector('.loading').classList.add('d-block');
-      thisForm.querySelector('.error-message').classList.remove('d-block');
-      thisForm.querySelector('.sent-message').classList.remove('d-block');
+      thisForm.querySelector('.loading').style.display = 'block';
+      thisForm.querySelector('.error-message').style.display = 'none';
+      thisForm.querySelector('.sent-message').style.display = 'none';
 
       // Cria um novo objeto FormData com os dados do formulário
       let formData = new FormData(thisForm);
@@ -83,10 +78,10 @@
     })
     .then(data => {
       // Remove o indicador de carregamento
-      thisForm.querySelector('.loading').classList.remove('d-block');
+      thisForm.querySelector('.loading').style.display = 'none';
       if (data.trim() == 'OK') {
         // Exibe a mensagem de sucesso e reseta o formulário
-        thisForm.querySelector('.sent-message').classList.add('d-block');
+        thisForm.querySelector('.sent-message').style.display = 'block';
         thisForm.reset();
       } else {
         // Exibe um erro se a submissão falhar
@@ -102,9 +97,9 @@
   // Função para exibir erros
   function displayError(thisForm, error) {
     // Remove o indicador de carregamento e exibe a mensagem de erro
-    thisForm.querySelector('.loading').classList.remove('d-block');
+    thisForm.querySelector('.loading').style.display = 'none';
     thisForm.querySelector('.error-message').innerHTML = error;
-    thisForm.querySelector('.error-message').classList.add('d-block');
+    thisForm.querySelector('.error-message').style.display = 'block';
   }
 
 })();
