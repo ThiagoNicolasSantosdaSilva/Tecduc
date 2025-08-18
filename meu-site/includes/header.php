@@ -14,7 +14,7 @@
 
   <header>
     <div class="logo">
-      <img src="../assets/img/logo/logo_tecduc-01.png" alt="Logo Tecduc" />
+      <img src="../assets/img/logo/logo_tecduc-06.png" alt="" />
     </div>
     <nav>
       <ul>
